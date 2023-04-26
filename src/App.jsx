@@ -8,14 +8,16 @@ import {
 import Home from "./pages/home/Home"
 import Login from "./pages/login/Login"
 import Signup from "./pages/signup/Signup"
+import Navbar from "./component/navbar/navbar"
 
 function App() {
   return (
     <>
       <Router>
-        <NavLink to="/">Home</NavLink>
+        <Navbar />
+        {/* <NavLink to="/">Home</NavLink>
         <NavLink to="/login">Login</NavLink>
-        <NavLink to="/signup">Signup</NavLink>
+        <NavLink to="/signup">Signup</NavLink> */}
 
         <Routes>
           <Route path="/" element={<Home />} />
