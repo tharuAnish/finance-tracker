@@ -5,8 +5,8 @@ import { useAuthContext } from "./useAuthContext"
 export const useSignup = () => {
   const [error, setError] = useState(null)
   const [isPending, setIsPending] = useState(false)
-  //desturucture dispatch
   const { dispatch } = useAuthContext()
+
   const signup = async (displayName, email, password) => {
     setError(null)
     setIsPending(true)
