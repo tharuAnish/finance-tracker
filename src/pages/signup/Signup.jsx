@@ -1,14 +1,18 @@
 import { useState } from "react"
 import styles from "./Signup.module.css"
+import { useSignup } from "../../hooks/useSignup"
 
 export default function Signup() {
   const [displayName, setDisplayName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  //usesignup
+  const { signup, isPending, error } = useSignup()
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log(displayName, email, password)
+    // prev we were logging now use signup function
+    signup(displayName, email, password)
   }
 
   return (
@@ -37,7 +41,16 @@ export default function Signup() {
           value={password}
         />
       </label>
-      <button className="btn">Signup</button>
+      {/* show only one button if loading this will not show */}
+      {!isPending && <button className="btn">Signup</button>}
+      {/* make the button disabled while the pending is true */}
+      {isPending && (
+        <button className="btn" disabled>
+          Loading...
+        </button>
+      )}
+      {/* check for error */}
+      {error && <p>{error}</p>}
     </form>
   )
 }
