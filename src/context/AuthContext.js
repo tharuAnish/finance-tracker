@@ -1,15 +1,15 @@
-import { createContext, useReducer, useEffect } from 'react'
-import { projectAuth } from '../firebase/config'
+import { createContext, useReducer, useEffect } from "react"
+import { projectAuth } from "../firebase/config"
 
 export const AuthContext = createContext()
 
 export const authReducer = (state, action) => {
   switch (action.type) {
-    case 'LOGIN':
+    case "LOGIN":
       return { ...state, user: action.payload }
-    case 'LOGOUT':
+    case "LOGOUT":
       return { ...state, user: null }
-    case 'AUTH_IS_READY':
+    case "AUTH_IS_READY":
       return { user: action.payload, authIsReady: true }
     default:
       return state
@@ -17,24 +17,26 @@ export const authReducer = (state, action) => {
 }
 
 export const AuthContextProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(authReducer, { 
+  const [state, dispatch] = useReducer(authReducer, {
     user: null,
-    authIsReady: false
+    // auth state change
+    authIsReady: false,
   })
 
   useEffect(() => {
-    const unsub = projectAuth.onAuthStateChanged(user => {
-      dispatch({ type: 'AUTH_IS_READY', payload: user })
+    // this function whenever any change in auth state, fire this fn
+    const unsub = projectAuth.onAuthStateChanged((user) => {
+      dispatch({ type: "AUTH_IS_READY", payload: user })
+      // once the auth is ready unsubscribe and now its never gona fire again
       unsub()
     })
   }, [])
 
-  console.log('AuthContext state:', state)
-  
+  console.log("AuthContext state:", state)
+
   return (
     <AuthContext.Provider value={{ ...state, dispatch }}>
-      { children }
+      {children}
     </AuthContext.Provider>
   )
-
 }
