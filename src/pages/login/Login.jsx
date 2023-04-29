@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useLogin } from "../../hooks/useLogin"
+
 // styles
 import styles from "./Login.module.css"
 
@@ -10,7 +11,6 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    //instead of console log now login
     login(email, password)
   }
 
@@ -33,14 +33,12 @@ export default function Login() {
           value={password}
         />
       </label>
-      {/* conditional button */}
       {!isPending && <button className="btn">Login</button>}
       {isPending && (
         <button className="btn" disabled>
           loading
         </button>
       )}
-      {/* if error show error */}
       {error && <p>{error}</p>}
     </form>
   )
