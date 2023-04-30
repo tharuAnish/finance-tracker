@@ -8,39 +8,66 @@ let initialState = {
   success: null,
 }
 
-// state: its current form
 const firestoreReducer = (state, action) => {
-  // have different cases based on action.type
   switch (action.type) {
-    //if non of the cases match then lets go with default
+    case "IS_PENDING":
+      return {
+        ...state,
+        isPending: true,
+        document: null,
+        success: false,
+        error: null,
+      }
+    case "ADDED_DOCUMENT":
+      return {
+        ...state,
+        isPending: false,
+        document: action.payLoad,
+        success: true,
+        error: null,
+      }
+    case "ERROR":
+      return {
+        ...state,
+        isPending: false,
+        document: null,
+        success: false,
+        error: action.payload,
+      }
     default:
       return state
   }
 }
 
 export const useFirestore = (collection) => {
-  //response: this is the state that represent response that we get back from firestore when req
-  //dispatch: dispatch new action to the reducer function
   const [response, dispatch] = useReducer(firestoreReducer, initialState)
-  //for cleanup function
   const [isCancelled, setIsCancelled] = useState(false)
 
   // collection to refrence firestore
   const ref = projectFirestore.collection(collection)
 
+  //only dispatch if not cancelled
+  const dispatchIfNotCancelled = (action) => {
+    if (!isCancelled) {
+      dispatch(action)
+    }
+  }
+
   //To add document
-  //inside the function we pas the document we want to add
-  const addDocument = (doc) => {}
+  const addDocument = async (doc) => {
+    dispatch({ type: "IS_PENDING" })
+    try {
+      const addedDocument = await ref.add(doc)
+      dispatchIfNotCancelled({ type: "ADDED_DOCUMENT", payLoad: addedDocument })
+    } catch (err) {
+      dispatchIfNotCancelled({ type: "ERROR", payload: err.message })
+    }
+  }
 
   //To delete document
-  //pass the id of the documrnt we want to delete
-  const deleteDocument = (id) => {}
+  const deleteDocument = async (id) => {}
 
   //cleanup function
-  // this will fire when the function first mounts
-  //never run again because we have empty dependency array
-  //whenever we go on a diffrent page it will cancel everything happening hear
-  //when we try to update state make sure this value be true
   useEffect(() => {
     return () => setIsCancelled(true)
   }, [])
