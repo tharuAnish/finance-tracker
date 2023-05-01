@@ -25,8 +25,8 @@ function App() {
               {!user && <Login />}
             </Route>
             <Route path="/signup">
-              {!user && <Redirect to="/" />}
-              {user && <Signup />}
+              {user && <Redirect to="/" />}
+              {!user && <Signup />}
             </Route>
           </Switch>
         </BrowserRouter>
