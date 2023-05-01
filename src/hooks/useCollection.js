@@ -7,14 +7,16 @@ export const useCollection = (collection) => {
 
   useEffect(() => {
     let ref = projectFirestore.collection(collection)
+
     const unsubscribe = ref.onSnapshot(
       (snapshot) => {
         let results = []
         snapshot.docs.forEach((doc) => {
+          console.log(doc)
           results.push({ ...doc.data(), id: doc.id })
         })
 
-        //update state
+        // update state
         setDocuments(results)
         setError(null)
       },
@@ -27,5 +29,6 @@ export const useCollection = (collection) => {
     // unsubscribe on unmount
     return () => unsubscribe()
   }, [collection])
+
   return { documents, error }
 }
